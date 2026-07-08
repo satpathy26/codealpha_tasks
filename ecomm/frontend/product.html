@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Details</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            padding:20px;
+        }
+
+        .card{
+            border:1px solid #ddd;
+            padding:20px;
+            width:400px;
+            border-radius:10px;
+        }
+
+        button{
+            padding:10px 15px;
+            cursor:pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Product Details</h1>
+
+<div id="product"></div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const productId = params.get("id");
+
+fetch(`http://localhost:3000/api/products/${productId}`)
+.then(res => res.json())
+.then(product => {
+
+    document.getElementById("product").innerHTML = `
+
+        <div class="card">
+
+            <h2>${product.name}</h2>
+
+            <p>${product.description}</p>
+
+            <h3>₹${product.price}</h3>
+
+            <button onclick="addToCart(${product.id})">
+                Add To Cart
+            </button>
+
+        </div>
+
+    `;
+
+});
+
+function addToCart(id){
+
+    let cart =
+    JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart.push(id);
+
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+    );
+
+    alert("Added To Cart");
+}
+
+</script>
+
+</body>
+</html>

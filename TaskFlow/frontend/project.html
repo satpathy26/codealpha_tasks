@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Workspace</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    
+    <link rel="stylesheet" href="css/project.css" />
+  </head>
+
+  <body>
+    <div class="workspace">
+      
+      <header>
+        <div>
+          <h1 id="projectName">Loading...</h1>
+          <p id="projectDescription"></p>
+        </div>
+        <button id="backBtn">
+          <i class="fa-solid fa-arrow-left"></i> Dashboard
+        </button>
+      </header>
+
+      <section class="members-section">
+        <div class="actions">
+          <button id="createTaskBtn"><i class="fa-solid fa-plus"></i> Create Task</button>
+          <button id="inviteMemberBtn"><i class="fa-solid fa-user-plus"></i> Invite Member</button>
+        </div>
+        <div id="membersContainer"></div>
+      </section>
+
+      <section class="kanban">
+        <div class="column">
+          <h3>Todo</h3>
+          <div id="todo"></div>
+        </div>
+
+        <div class="column">
+          <h3>In Progress</h3>
+          <div id="progress"></div>
+        </div>
+
+        <div class="column">
+          <h3>Review</h3>
+          <div id="review"></div>
+        </div>
+
+        <div class="column">
+          <h3>Done</h3>
+          <div id="done"></div>
+        </div>
+      </section>
+    </div>
+
+    <div id="taskModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Create Task</h2>
+          <button onclick="document.getElementById('taskModal').style.display='none'" class="close-btn">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        
+        <input id="taskTitle" placeholder="Task Title" />
+        <textarea id="taskDescription" placeholder="Description" rows="3"></textarea>
+        <select id="taskPriority">
+          <option>Low</option>
+          <option selected>Medium</option>
+          <option>High</option>
+          <option>Critical</option>
+        </select>
+        <input id="taskDueDate" type="date" />
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;">
+          <button onclick="document.getElementById('taskModal').style.display='none'" style="background: transparent; border: 1px solid #334155; color: #E2E8F0; box-shadow: none;">Cancel</button>
+          <button onclick="createTask()">Create Task</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="memberModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Invite Member</h2>
+          <button onclick="document.getElementById('memberModal').style.display='none'" class="close-btn">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <input id="memberEmail" type="email" placeholder="Enter member email" />
+        <select id="memberRole">
+          <option value="member">Member</option>
+          <option value="admin">Admin</option>
+        </select>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;">
+          <button onclick="document.getElementById('memberModal').style.display='none'" style="background: transparent; border: 1px solid #334155; color: #E2E8F0; box-shadow: none;">Cancel</button>
+          <button onclick="inviteMember()">Invite</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="taskDetailsModal" class="modal">
+      <div class="task-details">
+        
+        <div class="modal-header">
+          <h2>Task Details</h2>
+          <button onclick="closeTaskModal()" class="close-btn">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="task-body">
+          <div class="task-info">
+            <div class="info-row">
+              <label>Title</label>
+              <input id="editTitle" />
+            </div>
+
+            <div class="info-row">
+              <label>Description</label>
+              <textarea id="editDescription" rows="3"></textarea>
+            </div>
+
+            <div class="info-row">
+              <label>Priority</label>
+              <select id="editPriority">
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+                <option>Critical</option>
+              </select>
+            </div>
+
+            <div class="info-row">
+              <label>Status</label>
+              <select id="editStatus">
+                <option>Todo</option>
+                <option>In Progress</option>
+                <option>Review</option>
+                <option>Done</option>
+              </select>
+            </div>
+
+            <div class="info-row">
+              <label>Due Date</label>
+              <input type="date" id="editDueDate" />
+            </div>
+
+            <div class="info-row">
+              <label>Assigned To</label>
+              <select id="assignMember"></select>
+            </div>
+          </div>
+
+          <div class="comments-section">
+            <h3>Comments</h3>
+            <div id="commentsContainer"></div>
+            
+            <div class="comment-box">
+              <textarea id="newComment" placeholder="Write a comment..."></textarea>
+              <button onclick="addComment()">Send Comment</button>
+            </div>
+          </div>
+        </div>
+
+       <div class="task-footer">
+
+<button id="deleteTaskBtn">
+
+Delete Task
+
+</button>
+
+<button
+onclick="closeTaskModal()">
+
+Cancel
+
+</button>
+
+<button id="updateTaskBtn">
+
+Save Changes
+
+</button>
+
+</div>
+        
+      </div>
+    </div>
+
+    <script src="js/project.js"></script>
+  </body>
+</html>

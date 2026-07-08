@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Cart</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* CSS Reset */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc;
+        color: #0f172a;
+      }
+
+      /* Consistent MNC Style Top Navigation */
+      .navbar {
+        background-color: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 16px 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+      }
+
+      .navbar-brand {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: -0.5px;
+        text-decoration: none;
+      }
+
+      .store-btn {
+        background-color: #f1f5f9;
+        color: #0f172a;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.2s ease;
+      }
+
+      .store-btn:hover {
+        background-color: #e2e8f0;
+      }
+
+      /* Cart Container */
+      .cart-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .page-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 30px;
+        color: #1e293b;
+      }
+
+      /* Individual Cart Item (Horizontal Layout) */
+      .cart-item {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: box-shadow 0.2s ease;
+      }
+
+      .cart-item:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Product Image Placeholder */
+      .item-image {
+    width: 90px;
+    height: 90px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.cart-product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+      /* Product Details */
+      .item-info {
+        flex-grow: 1; /* Pushes the price/action section to the right */
+      }
+
+      .item-info h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .item-info p {
+        font-size: 14px;
+        color: #64748b;
+        line-height: 1.5;
+      }
+
+      /* Price and Remove Button Actions */
+      .item-actions {
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+        min-width: 120px;
+      }
+
+      .item-price {
+        font-size: 20px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .remove-btn {
+        background-color: transparent;
+        color: #ef4444; /* Subtle Red */
+        border: 1px solid #ef4444;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .remove-btn:hover {
+        background-color: #ef4444;
+        color: #ffffff;
+      }
+
+      /* Order Summary Bar at the bottom */
+      .order-summary {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      }
+
+      #total {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .place-order-btn {
+        background-color: #0f172a;
+        color: #ffffff;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background-color 0.2s ease,
+          transform 0.1s ease;
+      }
+
+      .place-order-btn:hover {
+        background-color: #334155;
+      }
+
+      .place-order-btn:active {
+        transform: scale(0.98);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="index.html" class="navbar-brand">Nexus Store</a>
+      <a href="index.html" class="store-btn"> ← Continue Shopping </a>
+    </nav>
+
+    <main class="cart-container">
+      <h1 class="page-title">Your Cart</h1>
+
+      <div id="cartItems"></div>
+
+      <div class="order-summary">
+        <div id="total">Total: ₹0</div>
+        <button class="place-order-btn" onclick="placeOrder()">
+          Place Order
+        </button>
+      </div>
+    </main>
+
+    <script>
+      // Your logic remains entirely untouched
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let total = 0;
+
+      cart.forEach((id) => {
+        fetch(`http://localhost:3000/api/products/${id}`)
+          .then((res) => res.json())
+          .then((product) => {
+            total += Number(product.price);
+
+            // Updated the template structure here to match the modern CSS classes
+            document.getElementById("cartItems").innerHTML += `
+                    <div class="cart-item">
+                       <div class="item-image">
+    ${
+      product.image_url
+        ? `<img src="${product.image_url}" alt="${product.name}" class="cart-product-image">`
+        : "No Image"
+    }
+</div>
+                        <div class="item-info">
+                            <h3>${product.name}</h3>
+                            <p>${product.description}</p>
+                        </div>
+                        <div class="item-actions">
+                            <div class="item-price">₹${product.price}</div>
+                            <button class="remove-btn" onclick="removeItem(${id})">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+            document.getElementById("total").innerHTML = `Total: ₹${total}`;
+          });
+      });
+
+      // REMOVE ITEM
+      function removeItem(id) {
+        cart = cart.filter((item) => item != id);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        location.reload();
+      }
+
+      // PLACE ORDER
+      function placeOrder() {
+        const userId = localStorage.getItem("userId");
+
+        if (!userId) {
+          alert("Please login first");
+          return;
+        }
+
+        if (cart.length === 0) {
+          alert("Your cart is empty");
+          return;
+        }
+
+        if (total <= 0) {
+          alert("Invalid order amount");
+          return;
+        }
+
+        fetch("http://localhost:3000/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userId,
+            cart: cart,
+            total: total,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            alert(data.message);
+            localStorage.removeItem("cart");
+            window.location.reload();
+          });
+      }
+    </script>
+  </body>
+</html>

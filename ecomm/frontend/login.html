@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Reset for consistent sizing */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Matches the cool gradient background from the register page */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* The main login card */
+        .login-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-container h1 {
+            color: #1a202c;
+            font-size: 26px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Styling the input fields */
+        input {
+            display: block;
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 15px;
+            color: #2d3748;
+            background-color: #f8fafc;
+            transition: all 0.2s ease-in-out;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: #a0aec0;
+        }
+
+        input:focus {
+            border-color: #3182ce;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+        }
+
+        /* Styling the button */
+        button {
+            width: 100%;
+            padding: 14px 15px;
+            margin-top: 10px;
+            background-color: #3182ce;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            background-color: #2b6cb0;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>Login</h1>
+
+        <input type="email" id="email" placeholder="Email Address">
+        <input type="password" id="password" placeholder="Password">
+
+        <button onclick="login()">Log In</button>
+    </div>
+
+    <script>
+        function login() {
+            // Grab the values first before validating them
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            // Updated this to use standard client-side alerts instead of backend res.json
+            if (!email || !password) {
+                alert("Email and Password required");
+                return;
+            }
+
+            const user = {
+                email: email,
+                password: password
+            };
+
+            fetch(
+                "http://localhost:3000/api/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(user)
+                }
+            )
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+
+                if (data.userId) {
+                    localStorage.setItem("userId", data.userId);
+                    window.location.href = "index.html";
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
